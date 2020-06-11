@@ -1,0 +1,56 @@
+Noah A. Smith
+2/21/08
+
+David Bamman
+2/14/14
+
+This package includes scripts for training (train_hmm.pl or train_hmm.py -- both are equivalent), running (viterbi.pl), and evaluating (tag_acc.pl) HMMs for sequence tagging.  Each script is documented on its own.  Here's a toy example to check that things work.
+
+Train a bigram HMM tagger from sections 2-21 of the Penn Treebank:
+
+  # Perl:
+  ./train_hmm.pl ptb.2-21.tgs ptb.2-21.txt > my.hmm
+
+  # Python:
+  ./train_hmm.py ptb.2-21.tgs ptb.2-21.txt > my.hmm
+
+  ./train_nmm_trigram.py ptb.2-21.tgs ptb.2-21.txt > trigram.hmm
+
+  ./train_nmm_trigram.py btb.train.tgs btb.train.txt > btb_my.hmm
+  ./train_nmm_trigram.py jv.train.tgs jv.train.txt > jv_my.hmm
+
+  ./train_hmm.py btb.train.tgs btb.train.txt > btb.hmm
+    ./train_hmm.py jv.train.tgs jv.train.txt > jv.hmm
+Run the Viterbi algorithm to tag some data:
+
+  ./viterbi.pl my.hmm < ptb.22.txt > my.out
+  ./viterbi.py my.hmm ptb.22.txt > my2.out
+
+    ./test.py trigram.hmm ptb.22.txt > test.out
+  ./viterbi_trigram.py trigram.hmm ptb.22.txt > trigram3.out
+
+    ./viterbi_trigram.py trigram.hmm ptb.23.txt > 23_my.out
+  
+
+  ./viterbi_trigram.py btb_my.hmm btb.test.txt > btb_my.out
+  ./viterbi_trigram.py jv_my.hmm jv.test.txt > jv_my.out
+
+    ./viterbi.pl btb.hmm < btb.test.txt > btb.out
+    ./viterbi.pl jv.hmm < jv.test.txt > jv.out
+Evaluate:
+
+  ./tag_acc.pl ptb.22.tgs my.out
+  ./tag_acc.pl ptb.22.tgs my2.out
+
+  ./tag_acc.pl ptb.22.tgs trigram.out
+
+  ./tag_acc.pl btb.test.tgs btb.out
+  ./tag_acc.pl btb.test.tgs btb_my.out
+
+  ./tag_acc.pl jv.test.tgs jv.out
+  ./tag_acc.pl jv.test.tgs jv_my.out
+
+Output should be as follows, modulo floating point differences:
+
+error rate by word:      0.0540917815389984 (2170 errors out of 40117)
+error rate by sentence:  0.655882352941176 (1115 errors out of 1700)
